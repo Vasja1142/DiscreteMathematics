@@ -18,7 +18,11 @@ namespace StronglyConnectedComponents
             this.size = size;
         }
 
-
+        public Graph(bool[,] graph)
+        {
+            this.graph = graph;
+            size = graph.GetLength(0);
+        }
 
         public string SccFinder()
         {
@@ -102,14 +106,7 @@ namespace StronglyConnectedComponents
             return SCCsText.ToString();
         }
 
-        public void AddGraphWithForm()
-        {
-            graph = MainForm.GetAdjacencyMatrix();
-
-            // Сложение с единичной матрицей 
-            for (int i = 0; i < size; i++)
-                graph[i, i] = true;
-        }
+        
 
 
     }

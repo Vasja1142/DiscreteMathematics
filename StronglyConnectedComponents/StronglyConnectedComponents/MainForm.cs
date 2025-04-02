@@ -4,14 +4,14 @@ namespace StronglyConnectedComponents
 {
     public partial class MainForm : Form
     {
-        public static CheckBox[,] adjacencyCheckBoxes;
+        private CheckBox[,] adjacencyCheckBoxes;
         private const int MatrixSize = 10;
+        Random randomGenerator = new Random();
         public MainForm()
         {
             InitializeComponent();
             InitializeCheckBoxArray();
         }
-
 
 
         private void InitializeCheckBoxArray()
@@ -43,7 +43,8 @@ namespace StronglyConnectedComponents
             }
         }
 
-        public static bool[,] GetAdjacencyMatrix()
+
+        public bool[,] GetAdjacencyMatrix()
         {
             bool[,] matrix = new bool[MatrixSize, MatrixSize];
 
@@ -51,32 +52,56 @@ namespace StronglyConnectedComponents
             {
                 for (int j = 0; j < MatrixSize; j++)
                 {
-                    // Проверяем, что чекбокс для этой ячейки был найден и инициализирован
-                    if (adjacencyCheckBoxes[i, j] != null)
-                    {
-                        // Записываем 1, если отмечен, иначе 0
-                        matrix[i, j] = adjacencyCheckBoxes[i, j].Checked ? true : false;
-                    }
-                    else
-                    {
-                        // Если чекбокс не был найден, ставим 0 (или выбрасываем ошибку, если это критично)
-                        matrix[i, j] = false;
-                        // Можно добавить: throw new InvalidOperationException($"CheckBox for matrix[{i},{j}] was not initialized.");
-                    }
+                    matrix[i, j] = adjacencyCheckBoxes[i, j] != null ? adjacencyCheckBoxes[i, j].Checked : false;
                 }
             }
+
             return matrix;
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Graph mainGraph = new Graph(MatrixSize);
-            mainGraph.AddGraphWithForm();
 
+        private void CalculateSccButton_Click(object sender, EventArgs e)
+        {
+            Graph mainGraph = new Graph(GetAdjacencyMatrix());
             textBox1.Text = mainGraph.SccFinder();
-            
 
         }
 
+        private void GenerateGraphButton_Click(object sender, EventArgs e)
+        {
+            int randomArcs = randomGenerator.Next(5, 25);
+            int randomVertex;
+            for (int i = 0; i < randomArcs; i++)
+            {
+                randomVertex = randomGenerator.Next(1, MatrixSize * MatrixSize + 1);
+
+                string checkBoxName = $"checkBox{randomVertex}";
+
+                // Находим контрол по имени на форме (и во вложенных контейнерах)
+                Control[] foundControls = this.Controls.Find(checkBoxName, true);
+
+                if (foundControls.Length > 0 && foundControls[0] is CheckBox cb)
+                {
+                    cb.Checked = true;
+                }
+
+            }
+        }
+
+        private void ClearGraphButton_Click(object sender, EventArgs e)
+        {
+            for (int n = 1; n <= MatrixSize * MatrixSize; n++) // Идем от 1 до 100
+            {
+                string checkBoxName = $"checkBox{n}";
+
+                Control[] foundControls = this.Controls.Find(checkBoxName, true);
+
+                if (foundControls.Length > 0 && foundControls[0] is CheckBox cb)
+                {
+                    cb.Checked = false;
+                }
+
+            }
+        }
     }
 }
