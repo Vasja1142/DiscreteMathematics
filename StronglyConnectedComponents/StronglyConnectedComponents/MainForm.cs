@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace StronglyConnectedComponents
 {
     public partial class MainForm : Form
@@ -10,10 +12,7 @@ namespace StronglyConnectedComponents
             InitializeCheckBoxArray();
         }
 
-        public CheckBox[,] GetCheckBox()
-        {
-            return adjacencyCheckBoxes;
-        }
+
 
         private void InitializeCheckBoxArray()
         {
@@ -71,17 +70,12 @@ namespace StronglyConnectedComponents
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Graph j = new Graph(MatrixSize);
+            Graph mainGraph = new Graph(MatrixSize);
+            mainGraph.AddGraphWithForm();
 
+            textBox1.Text = mainGraph.SccFinder();
+            
 
-
-            for (int i = 0; i < 10; i++) { }
-
-
-            if (checkBox1.Checked)
-            {
-                button1.Text = "fdàs";
-            }
         }
 
     }
